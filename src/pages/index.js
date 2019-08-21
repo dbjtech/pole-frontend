@@ -1,7 +1,7 @@
 import { Layout, Menu, Icon } from 'antd';
 import Main from '../components/Main';
 
-import config from './config';
+import config from '../config';
 // import styles from './index.css';
 
 const { Header, Content, Footer, Sider } = Layout;
