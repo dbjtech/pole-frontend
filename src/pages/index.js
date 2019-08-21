@@ -1,5 +1,7 @@
 import { Layout, Menu, Icon } from 'antd';
+import Main from '../components/Main';
 
+import config from './config';
 // import styles from './index.css';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -29,11 +31,11 @@ export default function() {
         </Menu>
       </Sider>
       <Layout>
-        <Header style={{ background: '#fff', padding: 0 }}>Welcome to AntD</Header>
+        <Header style={{ background: '#fff', padding: 0 }}>{config.name}</Header>
         <Content style={{ margin: '24px 16px 0' }}>
-          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>content</div>
+          <Main />
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+        <Footer>{config.copyright}</Footer>
       </Layout>
     </Layout>
   );
