@@ -32,7 +32,7 @@ export default function() {
       </Sider>
       <Layout>
         <Header style={{ background: '#fff', padding: 0 }}>{config.name}</Header>
-        <Content style={{ margin: '24px 16px 0' }}>
+        <Content style={{ margin: 24 }}>
           <Main />
         </Content>
         <Footer>{config.copyright}</Footer>

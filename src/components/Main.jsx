@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types'
+import { Row, Col } from 'antd';
 import { Map } from 'react-amap';
+import TableList from './TableList';
 
 import { amap } from '../config';
+import styles from './Main.css';
 
 export default class Main extends Component {
   // static propTypes = {
@@ -11,13 +14,23 @@ export default class Main extends Component {
 
   render() {
     return (
-      <div style={{ padding: 24, background: '#fff', minHeight: 500, width: '100%', height: 500 }}>
-        <Map
-          amapkey={amap.amapkey}
-          version={amap.version}
-          plugins={amap.plugins}
-          center={amap.mapCenter}
-        />
+      <div>
+        <div className={styles.amap}>
+          <Map
+            amapkey={amap.amapkey}
+            version={amap.version}
+            plugins={amap.plugins}
+            center={amap.mapCenter}
+          />
+        </div>
+        <Row gutter={24}>
+          <Col sm={24} lg={12}>
+            <TableList />
+          </Col>
+          <Col sm={24} lg={12}>
+            <TableList />
+          </Col>
+        </Row>
       </div>
     );
   }
