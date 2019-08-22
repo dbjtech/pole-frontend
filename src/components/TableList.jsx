@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types'
 import { Select, Table } from 'antd';
 
-import styles from './TableList.css';
+import styles from './Main.css';
 
 const { Option } = Select;
 
@@ -66,7 +66,7 @@ export default class TableList extends Component {
 
   render() {
     return (
-      <div className={styles.container}>
+      <div className={styles.listContainer}>
         时间：
         <Select defaultValue="hour" onChange={this.onChange} style={{ width: 120 }}>
           <Option value="hour">最近一小时</Option>

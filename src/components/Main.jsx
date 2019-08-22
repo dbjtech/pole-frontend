@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Row, Col } from 'antd';
 import { Map } from 'react-amap';
 import TableList from './TableList';
+import LineChart from './LineChart';
 
 import { amap } from '../config';
 import styles from './Main.css';
@@ -28,7 +29,7 @@ export default class Main extends Component {
             <TableList />
           </Col>
           <Col sm={24} lg={12}>
-            233
+            <LineChart />
           </Col>
         </Row>
       </div>
