@@ -1,4 +1,6 @@
 .container {
+  text-align: left;
+
   margin-top: 24px;
   padding: 24px;
   background-color: #fff;
