@@ -28,7 +28,7 @@ export default class Main extends Component {
             <TableList />
           </Col>
           <Col sm={24} lg={12}>
-            <TableList />
+            233
           </Col>
         </Row>
       </div>

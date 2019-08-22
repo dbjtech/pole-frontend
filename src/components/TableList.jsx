@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types'
-import { Select } from 'antd';
+import { Select, Table } from 'antd';
 
 import styles from './TableList.css';
 
@@ -15,6 +15,49 @@ export default class TableList extends Component {
     super(props);
 
     this.state = { value: 'hour' };
+
+    this.colums = [
+      {
+        title: '序号',
+        dataIndex: 'key',
+        key: 'key',
+      },
+      {
+        title: '分组',
+        dataIndex: 'group',
+        key: 'group',
+      },
+      {
+        title: 'SN',
+        dataIndex: 'sn',
+        key: 'sn',
+      },
+      {
+        title: 'IMEI',
+        dataIndex: 'imei',
+        key: 'imei',
+      },
+      {
+        title: '状态',
+        dataIndex: 'status',
+        key: 'status',
+      },
+      {
+        title: '时间',
+        dataIndex: 'date',
+        key: 'date',
+      },
+    ];
+    this.data = [
+      {
+        key: '1',
+        group: '塔1',
+        sn: '234567ACCC',
+        imei: '123456789012',
+        status: '有车',
+        date: '2019-8-20 15:39',
+      },
+    ];
   }
 
   onChange = value => {
@@ -31,6 +74,7 @@ export default class TableList extends Component {
           <Option value="week">最近一周</Option>
           <Option value="other">其它时间</Option>
         </Select>
+        <Table columns={this.colums} dataSource={this.data} scroll={{ x: true }} />
       </div>
     );
   }
