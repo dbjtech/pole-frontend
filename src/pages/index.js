@@ -31,7 +31,7 @@ export default function() {
         </Menu>
       </Sider>
       <Layout>
-        <Header style={{ background: '#fff', padding: 0 }}>{config.name}</Header>
+        <Header style={{ background: '#fff', fontSize: 20 }}>{config.name}</Header>
         <Content style={{ margin: 24 }}>
           <Main />
         </Content>

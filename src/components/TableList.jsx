@@ -48,16 +48,18 @@ export default class TableList extends Component {
         key: 'date',
       },
     ];
-    this.data = [
-      {
-        key: '1',
+    this.data = [];
+
+    for (let i = 1; i < 100; i += 1) {
+      this.data.push({
+        key: i,
         group: '塔1',
         sn: '234567ACCC',
         imei: '123456789012',
         status: '有车',
         date: '2019-8-20 15:39',
-      },
-    ];
+      });
+    }
   }
 
   onChange = value => {
@@ -68,13 +70,22 @@ export default class TableList extends Component {
     return (
       <div className={styles.listContainer}>
         时间：
-        <Select defaultValue="hour" onChange={this.onChange} style={{ width: 120 }}>
+        <Select
+          defaultValue="hour"
+          onChange={this.onChange}
+          style={{ width: 120, marginBottom: 10 }}
+        >
           <Option value="hour">最近一小时</Option>
           <Option value="day">最近一天</Option>
           <Option value="week">最近一周</Option>
           <Option value="other">其它时间</Option>
         </Select>
-        <Table columns={this.colums} dataSource={this.data} scroll={{ x: true }} />
+        <Table
+          columns={this.colums}
+          dataSource={this.data}
+          scroll={{ x: true }}
+          pagination={{ pageSize: 5, showQuickJumper: true }}
+        />
       </div>
     );
   }

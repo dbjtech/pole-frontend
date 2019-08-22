@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types'
-import { Row, Col } from 'antd';
+import { Row, Col, Card } from 'antd';
 import { Map } from 'react-amap';
 import TableList from './TableList';
 import LineChart from './LineChart';
 
-import { amap } from '../config';
+import config, { amap } from '../config';
 import styles from './Main.css';
 
 export default class Main extends Component {
@@ -16,20 +16,28 @@ export default class Main extends Component {
   render() {
     return (
       <div>
-        <div className={styles.amap}>
-          <Map
-            amapkey={amap.amapkey}
-            version={amap.version}
-            plugins={amap.plugins}
-            center={amap.mapCenter}
-          />
-        </div>
-        <Row gutter={24}>
-          <Col sm={24} lg={12}>
-            <TableList />
+        <Row>
+          <Col span={24} className={styles.card}>
+            <div className={styles.amap}>
+              <Map
+                amapkey={amap.amapkey}
+                version={amap.version}
+                plugins={amap.plugins}
+                center={amap.mapCenter}
+              />
+            </div>
           </Col>
-          <Col sm={24} lg={12}>
-            <LineChart />
+        </Row>
+        <Row gutter={24}>
+          <Col sm={24} lg={12} className={styles.card}>
+            <Card title={config.tableName}>
+              <TableList />
+            </Card>
+          </Col>
+          <Col sm={24} lg={12} className={styles.card}>
+            <Card title={config.chartName}>
+              <LineChart />
+            </Card>
           </Col>
         </Row>
       </div>
