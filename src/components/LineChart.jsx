@@ -1,9 +1,26 @@
 import React from 'react';
 import { Chart, Geom, Axis, Tooltip, Legend } from 'bizcharts';
+import { DatePicker, Select } from 'antd';
+import moment from 'moment';
 
 import styles from './Main.css';
 
+const { RangePicker } = DatePicker;
+const { Option } = Select;
+
 export default class LineChart extends React.Component {
+  onChange = (value, dateString) => {
+    console.log('Selected Time: ', value);
+    console.log('Formatted Selected Time: ', dateString);
+  };
+
+  onOk = value => {
+    // 这里请求后端数据，取得的数据不需要保存到 dva 中，因为只有折线图用到
+    console.log('onOk: ', value);
+  };
+
+  disabledDate = current => current > moment().endOf('day');
+
   render() {
     const data = [
       {
@@ -134,6 +151,28 @@ export default class LineChart extends React.Component {
     };
     return (
       <div className={styles.chartContainer}>
+        <div>
+          时间：
+          <RangePicker
+            disabledDate={this.disabledDate}
+            showTime={{ format: 'HH:mm:ss' }}
+            format="YYYY-MM-DD HH:mm:ss"
+            placeholder={['起始时间', '结束时间']}
+            onChange={this.onChange}
+            onOk={this.onOk}
+            style={{ marginRight: 16 }}
+          />
+          展示类型：
+          <Select
+            defaultValue="hour"
+            onChange={this.onChange}
+            style={{ width: 120, marginBottom: 10 }}
+          >
+            <Option value="hour">相对变化</Option>
+            <Option value="day">绝对变化</Option>
+          </Select>
+        </div>
+
         <Chart height={400} data={data} scale={cols} forceFit>
           <Legend />
           <Axis name="month" />

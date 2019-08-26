@@ -16,6 +16,7 @@ export default class TableList extends Component {
 
     this.state = { value: 'hour' };
 
+    // sn 是 zj300 定位器的标识，不用显示在表格中；imei 是车检器的标识
     this.colums = [
       {
         title: '序号',
@@ -26,11 +27,6 @@ export default class TableList extends Component {
         title: '分组',
         dataIndex: 'group',
         key: 'group',
-      },
-      {
-        title: 'SN',
-        dataIndex: 'sn',
-        key: 'sn',
       },
       {
         title: 'IMEI',
@@ -54,7 +50,6 @@ export default class TableList extends Component {
       this.data.push({
         key: i,
         group: '塔1',
-        sn: '234567ACCC',
         imei: '123456789012',
         status: '有车',
         date: '2019-8-20 15:39',
