@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types'
 import { Row, Col, Card } from 'antd';
-import { Map } from 'react-amap';
 import TableList from './TableList';
 import LineChart from './LineChart';
+import MapComponent from './MapComponent';
 
-import config, { amap } from '../config';
+import config from '../config';
 import styles from './Main.css';
 
 export default class Main extends Component {
@@ -18,14 +18,7 @@ export default class Main extends Component {
       <div>
         <Row>
           <Col span={24} className={styles.card}>
-            <div className={styles.amap}>
-              <Map
-                amapkey={amap.amapkey}
-                version={amap.version}
-                plugins={amap.plugins}
-                center={amap.mapCenter}
-              />
-            </div>
+            <MapComponent />
           </Col>
         </Row>
         <Row gutter={24}>
