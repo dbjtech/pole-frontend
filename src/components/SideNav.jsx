@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { Menu, Select } from 'antd';
 // import PropTypes from 'prop-types'
+import { Menu, Select } from 'antd';
+import { connect } from 'dva';
 
 import logo from '../assets/logo-01.png';
 import styles from './Main.css';
 
 const { Option } = Select;
 
-export default class SideNav extends Component {
+class SideNav extends Component {
   // static propTypes = {
   //   prop: PropTypes
   // }
@@ -43,8 +44,26 @@ export default class SideNav extends Component {
           <Menu.Item key="4">
             <span className="nav-text">塔4</span>
           </Menu.Item>
+          {/* dva-immer */}
+          <Menu.Item
+            onClick={() => {
+              this.props.dispatch({
+                type: 'global/add',
+              });
+            }}
+          >
+            {this.props.count}
+          </Menu.Item>
         </Menu>
       </nav>
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    count: state.global.count,
+  };
+}
+
+export default connect(mapStateToProps)(SideNav);
