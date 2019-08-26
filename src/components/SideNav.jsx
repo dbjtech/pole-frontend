@@ -49,6 +49,7 @@ class SideNav extends Component {
             onClick={() => {
               this.props.dispatch({
                 type: 'global/add',
+                payload: 2,
               });
             }}
           >

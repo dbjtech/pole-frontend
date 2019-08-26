@@ -3,10 +3,10 @@ export default {
   state: { currentTower: '', count: 0 },
   reducers: {
     setTower(state, action) {
-      return { ...state, currentTower: action.payload };
+      state.currentTower = action.payload;
     },
-    add(state) {
-      state.count += 1;
+    add(state, action) {
+      state.count += action.payload;
     },
   },
 };
