@@ -26,10 +26,10 @@ class SideNav extends Component {
           showSearch
           style={{ width: 120, marginBottom: 5, marginTop: 10 }}
         >
-          <Option value="hour">分组1</Option>
-          <Option value="day">分组2</Option>
-          <Option value="week">分组3</Option>
-          <Option value="other">分组4</Option>
+          <Option value="hour">塔1</Option>
+          <Option value="day">塔2</Option>
+          <Option value="week">塔3</Option>
+          <Option value="other">塔4</Option>
         </Select>
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']}>
           <Menu.Item key="1">

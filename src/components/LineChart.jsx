@@ -19,7 +19,7 @@ export default class LineChart extends React.Component {
     console.log('onOk: ', value);
   };
 
-  disabledDate = current => current > moment().endOf('day');
+  disabledDate = current => current > moment();
 
   render() {
     const data = [
@@ -154,13 +154,19 @@ export default class LineChart extends React.Component {
         <div>
           时间：
           <RangePicker
+            defaultValue={[moment().subtract(1, 'h'), moment()]}
             disabledDate={this.disabledDate}
-            showTime={{ format: 'HH:mm:ss' }}
             format="YYYY-MM-DD HH:mm:ss"
+            ranges={{
+              最近一小时: [moment().subtract(1, 'h'), moment()],
+              最近一天: [moment().subtract(1, 'd'), moment()],
+              最近一周: [moment().subtract(1, 'w'), moment()],
+            }}
+            showTime={{ format: 'HH:mm:ss' }}
             placeholder={['起始时间', '结束时间']}
+            style={{ marginRight: 16 }}
             onChange={this.onChange}
             onOk={this.onOk}
-            style={{ marginRight: 16 }}
           />
           展示类型：
           <Select

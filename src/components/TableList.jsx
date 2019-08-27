@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 // import PropTypes from 'prop-types'
-import { Select, Table } from 'antd';
+import { DatePicker, Table } from 'antd';
+import moment from 'moment';
 
 import styles from './Main.css';
 
-const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 export default class TableList extends Component {
   // static propTypes = {
@@ -52,7 +53,7 @@ export default class TableList extends Component {
         group: '塔1',
         imei: '123456789012',
         status: '有车',
-        date: '2019-8-20 15:39',
+        date: moment().format('YYYY-MM-DD HH:mm:ss'),
       });
     }
   }
@@ -61,20 +62,26 @@ export default class TableList extends Component {
     this.setState({ value });
   };
 
+  disabledDate = current => current > moment();
+
   render() {
     return (
       <div className={styles.listContainer}>
         时间：
-        <Select
-          defaultValue="hour"
+        <RangePicker
+          defaultValue={[moment().subtract(1, 'h'), moment()]}
+          disabledDate={this.disabledDate}
+          format="YYYY-MM-DD HH:mm:ss"
+          ranges={{
+            最近一小时: [moment().subtract(1, 'h'), moment()],
+            最近一天: [moment().subtract(1, 'd'), moment()],
+            最近一周: [moment().subtract(1, 'w'), moment()],
+          }}
+          showTime={{ format: 'HH:mm:ss' }}
+          placeholder={['起始时间', '结束时间']}
           onChange={this.onChange}
-          style={{ width: 120, marginBottom: 10 }}
-        >
-          <Option value="hour">最近一小时</Option>
-          <Option value="day">最近一天</Option>
-          <Option value="week">最近一周</Option>
-          <Option value="other">其它时间</Option>
-        </Select>
+          onOk={this.onOk}
+        />
         <Table
           columns={this.colums}
           dataSource={this.data}
@@ -85,3 +92,11 @@ export default class TableList extends Component {
     );
   }
 }
+
+// const data = [
+//   {
+//     imei: Number(),
+//     status: Boolean(),
+//     timestamp: Date(),
+//   },
+// ];
