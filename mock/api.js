@@ -10,12 +10,16 @@ export default {
       },
     ],
   }),
-  'GET /frontend/zj300': mockjs.mock({
-    'list|100': [
-      {
-        'angle|0-1.0-10': 1,
-        'timestamp|10000000000-1000000000000': 1,
-      },
-    ],
-  }),
+  'GET /frontend/zj300': (req, res) => {
+    const data = mockjs.mock({
+      'list|100': [
+        {
+          'angle|120.0-10': 1,
+          'timestamp|10000000000-1000000000000': 1,
+        },
+      ],
+    });
+
+    res.send(data);
+  },
 };

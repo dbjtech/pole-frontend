@@ -10,23 +10,59 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 export default class LineChart extends React.Component {
-  state = { dataArr: [] };
+  state = {
+    absoluteData: [],
+    relativeData: [],
+    isAbsolute: false,
+    startTime: +new Date() - 1000 * 60 * 60,
+    endTime: +new Date(),
+  };
 
   componentDidMount() {
-    axios.get('/frontend/zj300').then(data => {
-      const dataArr = [];
-      const list = data.data.list;
-
-      list.sort((a, b) => b.timestamp - a.timestamp);
-      for (let i = 0; i < list.length; i += 1) {
-        dataArr.push({
-          ...list[i],
-          date: moment(list[i].timestamp).format('YYYY-MM-DD HH:mm:ss'),
-        });
-      }
-      this.setState({ dataArr });
-    });
+    this.fetchData();
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.startTime !== prevState.startTime || this.state.endTime !== prevState.endTime) {
+      this.fetchData(0, this.state.startTime, this.state.endTime);
+    }
+  }
+
+  fetchData = (polesId = 0, startTime = this.state.startTime, endTime = this.state.endTime) => {
+    axios
+      .get(`/frontend/zj300?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`)
+      // .get('/frontend/zj300')
+      .then(data => {
+        const absoluteData = [];
+        const relativeData = [];
+        const list = data.data.list;
+
+        list.sort((a, b) => b.timestamp - a.timestamp);
+        for (let i = 0; i < list.length; i += 1) {
+          absoluteData.push({
+            ...list[i],
+            group: '塔1',
+            date: moment(list[i].timestamp).format('YYYY-MM-DD HH:mm:ss'),
+          });
+        }
+
+        for (let i = 0; i < absoluteData.length; i += 1) {
+          relativeData.push({
+            ...absoluteData[i],
+            angle: absoluteData[i + 1] ? absoluteData[i + 1].angle - absoluteData[i].angle : 0,
+          });
+        }
+
+        this.setState({ absoluteData, relativeData });
+      })
+      .catch(err => console.log(err));
+  };
+
+  onSelectChange = value => {
+    console.log(value);
+    const isAbsolute = value === 'absolute' ? true : false;
+    this.setState({ isAbsolute });
+  };
 
   onChange = (value, dateString) => {
     console.log('Selected Time: ', value);
@@ -51,7 +87,7 @@ export default class LineChart extends React.Component {
         <div>
           时间：
           <RangePicker
-            defaultValue={[moment().subtract(1, 'h'), moment()]}
+            defaultValue={[moment(this.state.startTime), moment(this.state.endTime)]}
             disabledDate={this.disabledDate}
             format="YYYY-MM-DD HH:mm:ss"
             ranges={{
@@ -67,16 +103,21 @@ export default class LineChart extends React.Component {
           />
           展示类型：
           <Select
-            defaultValue="hour"
-            onChange={this.onChange}
+            defaultValue="relative"
+            onChange={this.onSelectChange}
             style={{ width: 120, marginBottom: 10 }}
           >
-            <Option value="hour">相对变化</Option>
-            <Option value="day">绝对变化</Option>
+            <Option value="relative">相对变化</Option>
+            <Option value="absolute">绝对变化</Option>
           </Select>
         </div>
 
-        <Chart height={400} data={this.state.dataArr} scale={cols} forceFit>
+        <Chart
+          height={400}
+          data={this.state.isAbsolute ? this.state.absoluteData : this.state.relativeData}
+          scale={cols}
+          forceFit
+        >
           <Legend />
           <Axis name="date" />
           <Axis
@@ -90,13 +131,13 @@ export default class LineChart extends React.Component {
               type: 'y',
             }}
           />
-          <Geom type="line" position="date*angle" size={2} color={'city'} shape={'smooth'} />
+          <Geom type="line" position="date*angle" size={2} color={'group'} shape={'smooth'} />
           <Geom
             type="point"
             position="date*angle"
             size={4}
             shape={'circle'}
-            color={'city'}
+            color={'group'}
             style={{
               stroke: '#fff',
               lineWidth: 1,
