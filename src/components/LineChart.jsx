@@ -2,6 +2,7 @@ import React from 'react';
 import { Chart, Geom, Axis, Tooltip, Legend } from 'bizcharts';
 import { DatePicker, Select } from 'antd';
 import moment from 'moment';
+import axios from 'axios';
 
 import styles from './Main.css';
 
@@ -9,6 +10,24 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 export default class LineChart extends React.Component {
+  state = { dataArr: [] };
+
+  componentDidMount() {
+    axios.get('/frontend/zj300').then(data => {
+      const dataArr = [];
+      const list = data.data.list;
+
+      list.sort((a, b) => b.timestamp - a.timestamp);
+      for (let i = 0; i < list.length; i += 1) {
+        dataArr.push({
+          ...list[i],
+          date: moment(list[i].timestamp).format('YYYY-MM-DD HH:mm:ss'),
+        });
+      }
+      this.setState({ dataArr });
+    });
+  }
+
   onChange = (value, dateString) => {
     console.log('Selected Time: ', value);
     console.log('Formatted Selected Time: ', dateString);
@@ -22,138 +41,8 @@ export default class LineChart extends React.Component {
   disabledDate = current => current > moment();
 
   render() {
-    const data = [
-      {
-        timestamp: 'Jan',
-        city: 'Tokyo',
-        angle: 7,
-      },
-      {
-        timestamp: 'Jan',
-        city: 'London',
-        angle: 3.9,
-      },
-      {
-        timestamp: 'Feb',
-        city: 'Tokyo',
-        angle: 6.9,
-      },
-      {
-        timestamp: 'Feb',
-        city: 'London',
-        angle: 4.2,
-      },
-      {
-        timestamp: 'Mar',
-        city: 'Tokyo',
-        angle: 9.5,
-      },
-      {
-        timestamp: 'Mar',
-        city: 'London',
-        angle: 5.7,
-      },
-      {
-        timestamp: 'Apr',
-        city: 'Tokyo',
-        angle: 14.5,
-      },
-      {
-        timestamp: 'Apr',
-        city: 'London',
-        angle: 8.5,
-      },
-      {
-        timestamp: 'May',
-        city: 'Tokyo',
-        angle: 18.4,
-      },
-      {
-        timestamp: 'May',
-        city: 'London',
-        angle: 11.9,
-      },
-      {
-        timestamp: 'Jun',
-        city: 'Tokyo',
-        angle: 21.5,
-      },
-      {
-        timestamp: 'Jun',
-        city: 'London',
-        angle: 15.2,
-      },
-      {
-        timestamp: 'Jul',
-        city: 'Tokyo',
-        angle: 25.2,
-      },
-      {
-        timestamp: 'Jul',
-        city: 'London',
-        angle: 17,
-      },
-      {
-        timestamp: 'Aug',
-        city: 'Tokyo',
-        angle: 26.5,
-      },
-      {
-        timestamp: 'Aug',
-        city: 'London',
-        angle: 16.6,
-      },
-      {
-        timestamp: 'Sep',
-        city: 'Tokyo',
-        angle: 23.3,
-      },
-      {
-        timestamp: 'Sep',
-        city: 'London',
-        angle: 14.2,
-      },
-      {
-        timestamp: 'Oct',
-        city: 'Tokyo',
-        angle: 18.3,
-      },
-      {
-        timestamp: 'Oct',
-        city: 'London',
-        angle: 10.3,
-      },
-      {
-        timestamp: 'Nov',
-        city: 'Tokyo',
-        angle: 13.9,
-      },
-      {
-        timestamp: 'Nov',
-        city: 'London',
-        angle: 6.6,
-      },
-      {
-        timestamp: 'Dec',
-        city: 'Tokyo',
-        angle: 9.6,
-      },
-      {
-        timestamp: 'Dec',
-        city: 'London',
-        angle: 4.8,
-      },
-    ];
-    // const data = [];
-    // for (let i = 0; i < 50; i += 1) {
-    //   data.push({
-    //     timestamp: i,
-    //     city: 'London',
-    //     angle: 3,
-    //   });
-    // }
     const cols = {
-      timestamp: {
+      date: {
         range: [0, 1],
       },
     };
@@ -187,9 +76,9 @@ export default class LineChart extends React.Component {
           </Select>
         </div>
 
-        <Chart height={400} data={data} scale={cols} forceFit>
+        <Chart height={400} data={this.state.dataArr} scale={cols} forceFit>
           <Legend />
-          <Axis name="timestamp" />
+          <Axis name="date" />
           <Axis
             name="angle"
             label={{
@@ -201,10 +90,10 @@ export default class LineChart extends React.Component {
               type: 'y',
             }}
           />
-          <Geom type="line" position="timestamp*angle" size={2} color={'city'} shape={'smooth'} />
+          <Geom type="line" position="date*angle" size={2} color={'city'} shape={'smooth'} />
           <Geom
             type="point"
-            position="timestamp*angle"
+            position="date*angle"
             size={4}
             shape={'circle'}
             color={'city'}
