@@ -24,128 +24,136 @@ export default class LineChart extends React.Component {
   render() {
     const data = [
       {
-        month: 'Jan',
+        timestamp: 'Jan',
         city: 'Tokyo',
-        temperature: 7,
+        angle: 7,
       },
       {
-        month: 'Jan',
+        timestamp: 'Jan',
         city: 'London',
-        temperature: 3.9,
+        angle: 3.9,
       },
       {
-        month: 'Feb',
+        timestamp: 'Feb',
         city: 'Tokyo',
-        temperature: 6.9,
+        angle: 6.9,
       },
       {
-        month: 'Feb',
+        timestamp: 'Feb',
         city: 'London',
-        temperature: 4.2,
+        angle: 4.2,
       },
       {
-        month: 'Mar',
+        timestamp: 'Mar',
         city: 'Tokyo',
-        temperature: 9.5,
+        angle: 9.5,
       },
       {
-        month: 'Mar',
+        timestamp: 'Mar',
         city: 'London',
-        temperature: 5.7,
+        angle: 5.7,
       },
       {
-        month: 'Apr',
+        timestamp: 'Apr',
         city: 'Tokyo',
-        temperature: 14.5,
+        angle: 14.5,
       },
       {
-        month: 'Apr',
+        timestamp: 'Apr',
         city: 'London',
-        temperature: 8.5,
+        angle: 8.5,
       },
       {
-        month: 'May',
+        timestamp: 'May',
         city: 'Tokyo',
-        temperature: 18.4,
+        angle: 18.4,
       },
       {
-        month: 'May',
+        timestamp: 'May',
         city: 'London',
-        temperature: 11.9,
+        angle: 11.9,
       },
       {
-        month: 'Jun',
+        timestamp: 'Jun',
         city: 'Tokyo',
-        temperature: 21.5,
+        angle: 21.5,
       },
       {
-        month: 'Jun',
+        timestamp: 'Jun',
         city: 'London',
-        temperature: 15.2,
+        angle: 15.2,
       },
       {
-        month: 'Jul',
+        timestamp: 'Jul',
         city: 'Tokyo',
-        temperature: 25.2,
+        angle: 25.2,
       },
       {
-        month: 'Jul',
+        timestamp: 'Jul',
         city: 'London',
-        temperature: 17,
+        angle: 17,
       },
       {
-        month: 'Aug',
+        timestamp: 'Aug',
         city: 'Tokyo',
-        temperature: 26.5,
+        angle: 26.5,
       },
       {
-        month: 'Aug',
+        timestamp: 'Aug',
         city: 'London',
-        temperature: 16.6,
+        angle: 16.6,
       },
       {
-        month: 'Sep',
+        timestamp: 'Sep',
         city: 'Tokyo',
-        temperature: 23.3,
+        angle: 23.3,
       },
       {
-        month: 'Sep',
+        timestamp: 'Sep',
         city: 'London',
-        temperature: 14.2,
+        angle: 14.2,
       },
       {
-        month: 'Oct',
+        timestamp: 'Oct',
         city: 'Tokyo',
-        temperature: 18.3,
+        angle: 18.3,
       },
       {
-        month: 'Oct',
+        timestamp: 'Oct',
         city: 'London',
-        temperature: 10.3,
+        angle: 10.3,
       },
       {
-        month: 'Nov',
+        timestamp: 'Nov',
         city: 'Tokyo',
-        temperature: 13.9,
+        angle: 13.9,
       },
       {
-        month: 'Nov',
+        timestamp: 'Nov',
         city: 'London',
-        temperature: 6.6,
+        angle: 6.6,
       },
       {
-        month: 'Dec',
+        timestamp: 'Dec',
         city: 'Tokyo',
-        temperature: 9.6,
+        angle: 9.6,
       },
       {
-        month: 'Dec',
+        timestamp: 'Dec',
         city: 'London',
-        temperature: 4.8,
+        angle: 4.8,
       },
     ];
+    // const data = [];
+    // for (let i = 0; i < 50; i += 1) {
+    //   data.push({
+    //     timestamp: i,
+    //     city: 'London',
+    //     angle: 3,
+    //   });
+    // }
     const cols = {
-      month: {
+      timestamp: {
         range: [0, 1],
       },
     };
@@ -181,11 +189,11 @@ export default class LineChart extends React.Component {
 
         <Chart height={400} data={data} scale={cols} forceFit>
           <Legend />
-          <Axis name="month" />
+          <Axis name="timestamp" />
           <Axis
-            name="temperature"
+            name="angle"
             label={{
-              formatter: val => `${val}°C`,
+              formatter: val => `${val}°`,
             }}
           />
           <Tooltip
@@ -193,10 +201,10 @@ export default class LineChart extends React.Component {
               type: 'y',
             }}
           />
-          <Geom type="line" position="month*temperature" size={2} color={'city'} shape={'smooth'} />
+          <Geom type="line" position="timestamp*angle" size={2} color={'city'} shape={'smooth'} />
           <Geom
             type="point"
-            position="month*temperature"
+            position="timestamp*angle"
             size={4}
             shape={'circle'}
             color={'city'}
@@ -210,3 +218,10 @@ export default class LineChart extends React.Component {
     );
   }
 }
+
+// const data = [
+//   {
+//     angle: Number(),
+//     timestamp: Date(),
+//   },
+// ];
