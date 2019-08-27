@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { DatePicker, Table } from 'antd';
 import moment from 'moment';
 import axios from 'axios';
-// import request from 'umi-request';
 
 import styles from './Main.css';
 
@@ -17,7 +16,7 @@ export default class TableList extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { value: 'hour' };
+    this.state = { value: 'hour', dataArr: [] };
 
     // sn 是 zj300 定位器的标识，不用显示在表格中；imei 是车检器的标识
     this.colums = [
@@ -49,15 +48,15 @@ export default class TableList extends Component {
     ];
     this.data = [];
 
-    for (let i = 1; i < 100; i += 1) {
-      this.data.push({
-        key: i,
-        group: '塔1',
-        imei: '123456789012',
-        status: '有车',
-        date: moment().format('YYYY-MM-DD HH:mm:ss'),
-      });
-    }
+    // for (let i = 1; i < 100; i += 1) {
+    //   this.data.push({
+    //     key: i,
+    //     group: '塔1',
+    //     imei: '123456789012',
+    //     status: '有车',
+    //     date: moment().format('YYYY-MM-DD HH:mm:ss'),
+    //   });
+    // }
   }
 
   onChange = value => {
@@ -67,8 +66,22 @@ export default class TableList extends Component {
   disabledDate = current => current > moment();
 
   componentDidMount() {
-    axios.get('/frontend/np100').then(data => console.log(data));
-    // request('/frontend/np100').then(data => console.log(data));
+    axios.get('/frontend/np100').then(data => {
+      const dataArr = [];
+      const list = data.data.list;
+
+      list.sort((a, b) => b.timestamp - a.timestamp);
+      for (let i = 0; i < list.length; i += 1) {
+        dataArr.push({
+          ...list[i],
+          key: i + 1,
+          group: '塔1',
+          status: list[i].status ? '有车' : '无车',
+          date: moment(list[i].timestamp).format('YYYY-MM-DD HH:mm:ss'),
+        });
+      }
+      this.setState({ dataArr });
+    });
   }
 
   render() {
@@ -91,7 +104,7 @@ export default class TableList extends Component {
         />
         <Table
           columns={this.colums}
-          dataSource={this.data}
+          dataSource={this.state.dataArr}
           scroll={{ x: true }}
           pagination={{ pageSize: 5, showQuickJumper: true }}
         />
