@@ -11,7 +11,7 @@ export default {
           immer: true,
         },
         dynamicImport: false,
-        title: 'utility-pole-demo',
+        title: '电力传输塔杆姿态检测系统',
         dll: false,
 
         routes: {
