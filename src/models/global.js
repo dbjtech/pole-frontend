@@ -7,7 +7,7 @@ export default {
     },
     env: {
       isDev: false,
-      url: 'http://poles.dbjtech.com',
+      url: 'https://poles.dbjtech.com',
     },
   },
   reducers: {
