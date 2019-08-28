@@ -14,6 +14,7 @@ export default class LineChart extends React.Component {
     absoluteData: [],
     relativeData: [],
     isAbsolute: false,
+    polesId: 0,
     startTime: +new Date() - 1000 * 60 * 60,
     endTime: +new Date(),
   };
@@ -28,7 +29,11 @@ export default class LineChart extends React.Component {
     }
   }
 
-  fetchData = (polesId = 0, startTime = this.state.startTime, endTime = this.state.endTime) => {
+  fetchData = (
+    polesId = this.state.polesId,
+    startTime = this.state.startTime,
+    endTime = this.state.endTime,
+  ) => {
     axios
       .get(`/frontend/zj300?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`)
       // .get('/frontend/zj300')
@@ -37,10 +42,12 @@ export default class LineChart extends React.Component {
         const relativeData = [];
         const list = data.data.list;
 
+        // 使角度数据按时间顺序排列
         list.sort((a, b) => b.timestamp - a.timestamp);
         for (let i = 0; i < list.length; i += 1) {
           absoluteData.push({
             ...list[i],
+            // 分组需要从 dva 中获取
             group: '塔1',
             date: moment(list[i].timestamp).format('YYYY-MM-DD HH:mm:ss'),
           });
@@ -59,19 +66,14 @@ export default class LineChart extends React.Component {
   };
 
   onSelectChange = value => {
-    console.log(value);
     const isAbsolute = value === 'absolute' ? true : false;
     this.setState({ isAbsolute });
   };
 
-  onChange = (value, dateString) => {
-    console.log('Selected Time: ', value);
-    console.log('Formatted Selected Time: ', dateString);
-  };
-
-  onOk = value => {
+  onOk = momentArr => {
     // 这里请求后端数据，取得的数据不需要保存到 dva 中，因为只有折线图用到
-    console.log('onOk: ', value);
+    // console.log('onOk: ', +momentArr[1]);
+    this.fetchData(this.state.polesId, momentArr[0].unix(), momentArr[1].unix());
   };
 
   disabledDate = current => current > moment();
@@ -98,7 +100,6 @@ export default class LineChart extends React.Component {
             showTime={{ format: 'HH:mm:ss' }}
             placeholder={['起始时间', '结束时间']}
             style={{ marginRight: 16 }}
-            onChange={this.onChange}
             onOk={this.onOk}
           />
           展示类型：
