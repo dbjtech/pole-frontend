@@ -13,9 +13,10 @@ class TableList extends Component {
     dataSource: [],
   };
 
-  startTime = +new Date() - 1000 * 60 * 60;
+  // 时间戳按秒记
+  startTime = (new Date() - 1000 * 60 * 60 * 24) / 1000;
 
-  endTime = +new Date();
+  endTime = new Date() / 1000;
 
   // sn 是 zj300 定位器的标识，不用显示在表格中；imei 是车检器的标识
   colums = [
@@ -50,11 +51,22 @@ class TableList extends Component {
     this.fetchData();
   }
 
+  componentDidUpdate(prevProps) {
+    // 典型用法（不要忘记比较 props）：
+    if (this.props.pole.id !== prevProps.pole.id) {
+      this.fetchData(this.props.pole.id);
+    }
+  }
+
   fetchData = (
     polesId = this.props.pole.id,
     startTime = this.startTime,
     endTime = this.endTime,
   ) => {
+    if (!polesId) {
+      return;
+    }
+
     axios
       .get(`/frontend/np100?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`)
       // .get('/frontend/zj300')
@@ -70,7 +82,7 @@ class TableList extends Component {
             key: i + 1,
             group: this.props.pole.name,
             status: list[i].status ? '有车' : '无车',
-            date: moment(list[i].timestamp).format('YYYY-MM-DD HH:mm:ss'),
+            date: moment(list[i].timestamp * 1000).format('YYYY-MM-DD HH:mm:ss'),
           });
         }
 
@@ -91,7 +103,8 @@ class TableList extends Component {
       <div className={styles.listContainer}>
         时间：
         <RangePicker
-          defaultValue={[moment().subtract(1, 'h'), moment()]}
+          defaultValue={[moment(this.startTime * 1000), moment(this.endTime * 1000)]}
+          // defaultValue={[moment().subtract(1, 'h'), moment()]}
           disabledDate={this.disabledDate}
           format="YYYY-MM-DD HH:mm:ss"
           ranges={{

@@ -17,12 +17,20 @@ class LineChart extends React.Component {
     isAbsolute: false,
   };
 
-  startTime = +new Date() - 1000 * 60 * 60;
+  // 时间戳按秒记
+  startTime = (new Date() - 1000 * 60 * 60 * 24) / 1000;
 
-  endTime = +new Date();
+  endTime = new Date() / 1000;
 
   componentDidMount() {
     this.fetchData();
+  }
+
+  componentDidUpdate(prevProps) {
+    // 典型用法（不要忘记比较 props）：
+    if (this.props.pole.id !== prevProps.pole.id) {
+      this.fetchData(this.props.pole.id);
+    }
   }
 
   fetchData = (
@@ -30,6 +38,10 @@ class LineChart extends React.Component {
     startTime = this.startTime,
     endTime = this.endTime,
   ) => {
+    if (!polesId) {
+      return;
+    }
+
     axios
       .get(`/frontend/zj300?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`)
       // .get('/frontend/zj300')
@@ -45,7 +57,7 @@ class LineChart extends React.Component {
             ...list[i],
             // 分组需要从 dva 中获取
             group: this.props.pole.name,
-            date: moment(list[i].timestamp).format('YYYY-MM-DD HH:mm:ss'),
+            date: moment(list[i].timestamp * 1000).format('YYYY-MM-DD HH:mm:ss'),
           });
         }
 
@@ -84,7 +96,7 @@ class LineChart extends React.Component {
         <div>
           时间：
           <RangePicker
-            defaultValue={[moment().subtract(1, 'h'), moment()]}
+            defaultValue={[moment(this.startTime * 1000), moment(this.endTime * 1000)]}
             disabledDate={this.disabledDate}
             format="YYYY-MM-DD HH:mm:ss"
             ranges={{
