@@ -43,8 +43,11 @@ class LineChart extends React.Component {
     }
 
     axios
-      .get(`/frontend/zj300?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`)
-      // .get('/frontend/zj300')
+      .get(
+        `${
+          this.props.env.isDev ? '' : this.props.env.url
+        }/frontend/zj300?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`,
+      )
       .then(data => {
         const absoluteData = [];
         const relativeData = [];
@@ -167,6 +170,7 @@ class LineChart extends React.Component {
 function mapStateToProps(state) {
   return {
     pole: state.global.pole,
+    env: state.global.env,
   };
 }
 

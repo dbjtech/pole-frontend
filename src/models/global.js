@@ -5,11 +5,14 @@ export default {
       id: '',
       name: '',
     },
+    env: {
+      isDev: false,
+      url: 'http://poles.dbjtech.com',
+    },
   },
   reducers: {
     setPole(state, action) {
       state.pole = action.payload;
-      // console.log(state.pole);
     },
   },
 };

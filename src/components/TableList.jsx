@@ -68,8 +68,11 @@ class TableList extends Component {
     }
 
     axios
-      .get(`/frontend/np100?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`)
-      // .get('/frontend/zj300')
+      .get(
+        `${
+          this.props.env.isDev ? '' : this.props.env.url
+        }/frontend/np100?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`,
+      )
       .then(data => {
         const list = data.data.data;
         const dataSource = [];
@@ -138,6 +141,7 @@ class TableList extends Component {
 function mapStateToProps(state) {
   return {
     pole: state.global.pole,
+    env: state.global.env,
   };
 }
 
