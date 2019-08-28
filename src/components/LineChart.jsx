@@ -1,6 +1,7 @@
 import React from 'react';
-import { Chart, Geom, Axis, Tooltip, Legend } from 'bizcharts';
 import { DatePicker, Select } from 'antd';
+import { connect } from 'dva';
+import { Chart, Geom, Axis, Tooltip, Legend } from 'bizcharts';
 import moment from 'moment';
 import axios from 'axios';
 
@@ -9,24 +10,25 @@ import styles from './Main.css';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-export default class LineChart extends React.Component {
+class LineChart extends React.Component {
   state = {
     absoluteData: [],
     relativeData: [],
     isAbsolute: false,
-    polesId: 1,
-    startTime: +new Date() - 1000 * 60 * 60,
-    endTime: +new Date(),
   };
+
+  startTime = +new Date() - 1000 * 60 * 60;
+
+  endTime = +new Date();
 
   componentDidMount() {
     this.fetchData();
   }
 
   fetchData = (
-    polesId = this.state.polesId,
-    startTime = this.state.startTime,
-    endTime = this.state.endTime,
+    polesId = this.props.pole.id,
+    startTime = this.startTime,
+    endTime = this.endTime,
   ) => {
     axios
       .get(`/frontend/zj300?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`)
@@ -42,7 +44,7 @@ export default class LineChart extends React.Component {
           absoluteData.push({
             ...list[i],
             // 分组需要从 dva 中获取
-            group: '塔1',
+            group: this.props.pole.name,
             date: moment(list[i].timestamp).format('YYYY-MM-DD HH:mm:ss'),
           });
         }
@@ -149,3 +151,11 @@ export default class LineChart extends React.Component {
 //     timestamp: Date(),
 //   },
 // ];
+
+function mapStateToProps(state) {
+  return {
+    pole: state.global.pole,
+  };
+}
+
+export default connect(mapStateToProps)(LineChart);
