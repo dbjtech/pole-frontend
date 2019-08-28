@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import PropTypes from 'prop-types'
 import { DatePicker, Table } from 'antd';
 import moment from 'moment';
-import axios from 'axios';
+// import axios from 'axios';
 
 import styles from './Main.css';
 
@@ -66,22 +66,21 @@ export default class TableList extends Component {
   disabledDate = current => current > moment();
 
   componentDidMount() {
-    axios.get('/frontend/np100').then(data => {
-      const dataArr = [];
-      const list = data.data.list;
-
-      list.sort((a, b) => b.timestamp - a.timestamp);
-      for (let i = 0; i < list.length; i += 1) {
-        dataArr.push({
-          ...list[i],
-          key: i + 1,
-          group: '塔1',
-          status: list[i].status ? '有车' : '无车',
-          date: moment(list[i].timestamp).format('YYYY-MM-DD HH:mm:ss'),
-        });
-      }
-      this.setState({ dataArr });
-    });
+    // axios.get('/frontend/np100').then(data => {
+    //   const dataArr = [];
+    //   const list = data.data.list;
+    //   list.sort((a, b) => b.timestamp - a.timestamp);
+    //   for (let i = 0; i < list.length; i += 1) {
+    //     dataArr.push({
+    //       ...list[i],
+    //       key: i + 1,
+    //       group: '塔1',
+    //       status: list[i].status ? '有车' : '无车',
+    //       date: moment(list[i].timestamp).format('YYYY-MM-DD HH:mm:ss'),
+    //     });
+    //   }
+    //   this.setState({ dataArr });
+    // });
   }
 
   render() {

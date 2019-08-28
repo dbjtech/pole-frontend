@@ -1,9 +1,16 @@
 export default {
   namespace: 'global',
-  state: { currentTower: '', count: 0 },
+  state: {
+    pole: {
+      id: '',
+      name: '',
+    },
+    count: 0,
+  },
   reducers: {
-    setTower(state, action) {
-      state.currentTower = action.payload;
+    setPole(state, action) {
+      state.pole = action.payload;
+      // console.log(state.pole);
     },
     add(state, action) {
       state.count += action.payload;

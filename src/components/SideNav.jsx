@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types'
 import { Menu, Select } from 'antd';
 import { connect } from 'dva';
+import axios from 'axios';
 
 import logo from '../assets/logo-01.png';
 import styles from './Main.css';
@@ -9,9 +9,43 @@ import styles from './Main.css';
 const { Option } = Select;
 
 class SideNav extends Component {
-  // static propTypes = {
-  //   prop: PropTypes
-  // }
+  state = {
+    polesList: [],
+  };
+
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData = () => {
+    axios
+      .get(`/frontend/poles`)
+      .then(data => {
+        const polesList = data.data.data;
+        // console.log(polesList);
+        this.setState({ polesList });
+      })
+      .catch(err => console.log(err));
+  };
+
+  setPole = id => {
+    const pole = this.state.polesList.filter(value => value.id === id);
+
+    this.props.dispatch({
+      type: 'global/setPole',
+      payload: pole[0],
+    });
+  };
+
+  onChange = id => {
+    // 通过 Select 选中电线杆
+    this.setPole(id);
+  };
+
+  onSelect = ({ key }) => {
+    // 通过 Menu 选中电线杆，由于 Menu 中要求 key 是字符串，故要转成数字
+    this.setPole(+key);
+  };
 
   render() {
     return (
@@ -21,31 +55,30 @@ class SideNav extends Component {
           <h1>领翌科技</h1>
         </div>
         <Select
-          defaultValue="hour"
-          // onChange={this.onChange}
+          placeholder="搜索框"
           showSearch
+          value={this.props.pole.id}
           style={{ width: 120, marginBottom: 5, marginTop: 10 }}
+          onChange={this.onChange}
         >
-          <Option value="hour">塔1</Option>
-          <Option value="day">塔2</Option>
-          <Option value="week">塔3</Option>
-          <Option value="other">塔4</Option>
+          {this.state.polesList.map(item => (
+            <Option value={item.id} key={item.id}>
+              {item.name}
+            </Option>
+          ))}
         </Select>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']}>
-          <Menu.Item key="1">
-            <span className="nav-text">塔1</span>
-          </Menu.Item>
-          <Menu.Item key="2">
-            <span className="nav-text">塔2</span>
-          </Menu.Item>
-          <Menu.Item key="3">
-            <span className="nav-text">塔3</span>
-          </Menu.Item>
-          <Menu.Item key="4">
-            <span className="nav-text">塔4</span>
-          </Menu.Item>
+        <Menu
+          mode="inline"
+          // selectedKeys 要求 string[]
+          selectedKeys={[`${this.props.pole.id}`]}
+          theme="dark"
+          onSelect={this.onSelect}
+        >
+          {this.state.polesList.map(item => (
+            <Menu.Item key={item.id}>{item.name}</Menu.Item>
+          ))}
           {/* dva-immer */}
-          <Menu.Item
+          {/* <Menu.Item
             onClick={() => {
               this.props.dispatch({
                 type: 'global/add',
@@ -54,7 +87,7 @@ class SideNav extends Component {
             }}
           >
             {this.props.count}
-          </Menu.Item>
+          </Menu.Item> */}
         </Menu>
       </nav>
     );
@@ -64,6 +97,7 @@ class SideNav extends Component {
 function mapStateToProps(state) {
   return {
     count: state.global.count,
+    pole: state.global.pole,
   };
 }
 
