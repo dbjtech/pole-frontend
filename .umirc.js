@@ -29,4 +29,6 @@ export default {
       // pathRewrite: { '^/api': '' },
     },
   },
+  // 指定 react-router 的 base，部署到非根目录时需要配置
+  base: '/pole-frontend',
 };
