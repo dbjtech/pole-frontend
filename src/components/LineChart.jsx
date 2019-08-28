@@ -23,12 +23,6 @@ export default class LineChart extends React.Component {
     this.fetchData();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.startTime !== prevState.startTime || this.state.endTime !== prevState.endTime) {
-      this.fetchData(0, this.state.startTime, this.state.endTime);
-    }
-  }
-
   fetchData = (
     polesId = this.state.polesId,
     startTime = this.state.startTime,
@@ -73,7 +67,6 @@ export default class LineChart extends React.Component {
 
   onOk = momentArr => {
     // 这里请求后端数据，取得的数据不需要保存到 dva 中，因为只有折线图用到
-    // console.log('onOk: ', +momentArr[1]);
     this.fetchData(this.state.polesId, momentArr[0].unix(), momentArr[1].unix());
   };
 
@@ -90,7 +83,7 @@ export default class LineChart extends React.Component {
         <div>
           时间：
           <RangePicker
-            defaultValue={[moment(this.state.startTime), moment(this.state.endTime)]}
+            defaultValue={[moment().subtract(1, 'h'), moment()]}
             disabledDate={this.disabledDate}
             format="YYYY-MM-DD HH:mm:ss"
             ranges={{
