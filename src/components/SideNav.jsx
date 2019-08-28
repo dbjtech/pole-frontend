@@ -22,18 +22,18 @@ class SideNav extends Component {
       .get(`/frontend/poles`)
       .then(data => {
         const polesList = data.data.data;
-        // console.log(polesList);
-        this.setState({ polesList });
+        // setPole 需要异步设置，否则 Select 会报错
+        this.setState({ polesList }, () => this.setPole(polesList[0].id));
       })
       .catch(err => console.log(err));
   };
 
   setPole = id => {
-    const pole = this.state.polesList.filter(value => value.id === id);
+    const filteredPoleList = this.state.polesList.filter(value => value.id === id);
 
     this.props.dispatch({
       type: 'global/setPole',
-      payload: pole[0],
+      payload: filteredPoleList[0],
     });
   };
 
@@ -77,17 +77,6 @@ class SideNav extends Component {
           {this.state.polesList.map(item => (
             <Menu.Item key={item.id}>{item.name}</Menu.Item>
           ))}
-          {/* dva-immer */}
-          {/* <Menu.Item
-            onClick={() => {
-              this.props.dispatch({
-                type: 'global/add',
-                payload: 2,
-              });
-            }}
-          >
-            {this.props.count}
-          </Menu.Item> */}
         </Menu>
       </nav>
     );
@@ -96,7 +85,6 @@ class SideNav extends Component {
 
 function mapStateToProps(state) {
   return {
-    count: state.global.count,
     pole: state.global.pole,
   };
 }
