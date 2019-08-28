@@ -31,4 +31,8 @@ export default {
   },
   // 指定 react-router 的 base，部署到非根目录时需要配置
   base: '/pole-frontend',
+  // 指定 webpack 的 publicPath，指向静态资源文件所在的路径。
+  publicPath: '/pole-frontend/',
+  // 指定输出路径
+  outputPath: '/docs',
 };
