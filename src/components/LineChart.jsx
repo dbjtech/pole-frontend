@@ -14,7 +14,7 @@ export default class LineChart extends React.Component {
     absoluteData: [],
     relativeData: [],
     isAbsolute: false,
-    polesId: 0,
+    polesId: 1,
     startTime: +new Date() - 1000 * 60 * 60,
     endTime: +new Date(),
   };
@@ -40,7 +40,8 @@ export default class LineChart extends React.Component {
       .then(data => {
         const absoluteData = [];
         const relativeData = [];
-        const list = data.data.list;
+        const list = data.data.data;
+        console.log(list);
 
         // 使角度数据按时间顺序排列
         list.sort((a, b) => b.timestamp - a.timestamp);
