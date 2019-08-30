@@ -21,10 +21,14 @@ class TableList extends Component {
   endTime = new Date() / 1000;
 
   // 初始化 socket
-  // socket = io(this.props.env.isDev ? '' : this.props.env.url);
+  // socket = io(this.props.url);
 
   componentDidMount() {
     this.fetchData();
+
+    // this.socket.on('connect', () => {
+    //   console.log('socket connected');
+    // });
   }
 
   componentDidUpdate(prevProps) {
@@ -45,9 +49,7 @@ class TableList extends Component {
 
     axios
       .get(
-        `${
-          this.props.env.isDev ? '' : this.props.env.url
-        }/frontend/np100?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`,
+        `${this.props.url}/frontend/np100?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`,
       )
       .then(data => {
         const list = data.data.data;
@@ -152,7 +154,7 @@ class TableList extends Component {
 function mapStateToProps(state) {
   return {
     pole: state.global.pole,
-    env: state.global.env,
+    url: state.global.url,
   };
 }
 

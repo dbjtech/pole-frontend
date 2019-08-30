@@ -46,9 +46,7 @@ class LineEchart extends React.Component {
 
     axios
       .get(
-        `${
-          this.props.env.isDev ? '' : this.props.env.url
-        }/frontend/zj300?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`,
+        `${this.props.url}/frontend/zj300?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`,
       )
       .then(data => {
         const absoluteData = [];
@@ -220,7 +218,7 @@ class LineEchart extends React.Component {
 function mapStateToProps(state) {
   return {
     pole: state.global.pole,
-    env: state.global.env,
+    url: state.global.url,
   };
 }
 

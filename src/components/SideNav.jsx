@@ -20,7 +20,7 @@ class SideNav extends Component {
 
   fetchData = () => {
     axios
-      .get(`${this.props.env.isDev ? '' : this.props.env.url}/frontend/poles`)
+      .get(`${this.props.url}/frontend/poles`)
       .then(data => {
         const polesList = data.data.data;
         // setPole 需要异步设置，否则 Select 会报错
@@ -89,7 +89,7 @@ class SideNav extends Component {
 function mapStateToProps(state) {
   return {
     pole: state.global.pole,
-    env: state.global.env,
+    url: state.global.url,
   };
 }
 
