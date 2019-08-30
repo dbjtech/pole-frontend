@@ -3,6 +3,7 @@ import { DatePicker, Table, Spin } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import axios from 'axios';
+// import io from 'socket.io-client';
 
 import styles from './Main.css';
 
@@ -19,34 +20,8 @@ class TableList extends Component {
 
   endTime = new Date() / 1000;
 
-  // sn 是 zj300 定位器的标识，不用显示在表格中；imei 是车检器的标识
-  colums = [
-    {
-      title: '序号',
-      dataIndex: 'key',
-      key: 'key',
-    },
-    {
-      title: '分组',
-      dataIndex: 'group',
-      key: 'group',
-    },
-    {
-      title: 'IMEI',
-      dataIndex: 'imei',
-      key: 'imei',
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
-    },
-    {
-      title: '时间',
-      dataIndex: 'date',
-      key: 'date',
-    },
-  ];
+  // 初始化 socket
+  // socket = io(this.props.env.isDev ? '' : this.props.env.url);
 
   componentDidMount() {
     this.fetchData();
@@ -98,11 +73,44 @@ class TableList extends Component {
   disabledDate = current => current > moment();
 
   onOk = momentArr => {
+    // 这三个都不一样
+    // console.log(momentArr[0]);
+    // console.log(momentArr[1]);
+    // console.log(moment());
     // 这里请求后端数据，取得的数据不需要保存到 dva 中，因为只有表格图用到
     this.fetchData(this.props.pole.id, momentArr[0].unix(), momentArr[1].unix());
   };
 
   render() {
+    // sn 是 zj300 定位器的标识，不用显示在表格中；imei 是车检器的标识
+    const colums = [
+      {
+        title: '序号',
+        dataIndex: 'key',
+        key: 'key',
+      },
+      {
+        title: '分组',
+        dataIndex: 'group',
+        key: 'group',
+      },
+      {
+        title: 'IMEI',
+        dataIndex: 'imei',
+        key: 'imei',
+      },
+      {
+        title: '状态',
+        dataIndex: 'status',
+        key: 'status',
+      },
+      {
+        title: '时间',
+        dataIndex: 'date',
+        key: 'date',
+      },
+    ];
+
     return (
       <div className={styles.listContainer}>
         <Spin spinning={this.state.loading}>
@@ -122,7 +130,7 @@ class TableList extends Component {
             onOk={this.onOk}
           />
           <Table
-            columns={this.colums}
+            columns={colums}
             dataSource={this.state.dataSource}
             scroll={{ x: true }}
             pagination={{ pageSize: 5, showQuickJumper: true }}

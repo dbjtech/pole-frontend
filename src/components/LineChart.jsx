@@ -19,9 +19,10 @@ class LineChart extends React.Component {
   };
 
   // 时间戳按秒记
-  startTime = (new Date() - 1000 * 60 * 60) / 1000;
+  startTime = (new Date() - 1000 * 60 * 60 * 12) / 1000;
 
-  endTime = new Date() / 1000;
+  // 注意取得的时间，可能这段时间内没有数据
+  endTime = (new Date() - 1000 * 60 * 60 * 11) / 1000;
 
   componentDidMount() {
     this.fetchData();
@@ -115,6 +116,8 @@ class LineChart extends React.Component {
               style={{ marginRight: 16 }}
               onOk={this.onOk}
             />
+          </div>
+          <div style={{ marginTop: 8 }}>
             展示类型：
             <Select
               defaultValue="relative"

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types'
 import { Row, Col, Card } from 'antd';
 import TableList from './TableList';
 import LineChart from './LineChart';
@@ -8,11 +7,8 @@ import MapComponent from './MapComponent';
 import config from '../config';
 import styles from './Main.css';
 
+// Main.jsx 和 index.js 类似，负责结构不负责逻辑
 export default class Main extends Component {
-  // static propTypes = {
-  // prop: PropTypes
-  // }
-
   render() {
     return (
       <div>

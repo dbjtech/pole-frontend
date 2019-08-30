@@ -7,6 +7,7 @@ import config from '../config';
 
 const { Header, Content, Footer, Sider } = Layout;
 
+// index.js 只负责页面结构，不处理逻辑
 export default function() {
   return (
     <Layout style={{ height: '100%' }}>

@@ -12,7 +12,7 @@ export const amap = {
   version: '1.4.14',
   // 初始中心的经纬度
   mapCenter: { longitude: 113.5418, latitude: 22.13 },
-  // 提供标尺参照和放缩工具
+  // 显示卫星地图
   plugins: [
     // 'Scale',
     // 'ControlBar',
