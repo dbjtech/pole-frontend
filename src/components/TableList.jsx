@@ -160,7 +160,7 @@ class TableList extends Component {
           />
           <Table
             columns={colums}
-            dataSource={this.state.dataSource}
+            dataSource={this.state.dataSource.filter(value => value.status === '有车')}
             scroll={{ x: true }}
             pagination={{ pageSize: 5, showQuickJumper: true }}
           />
