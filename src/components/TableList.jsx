@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DatePicker, Table } from 'antd';
+import { DatePicker, Table, Spin } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import axios from 'axios';
@@ -11,6 +11,7 @@ const { RangePicker } = DatePicker;
 class TableList extends Component {
   state = {
     dataSource: [],
+    loading: true,
   };
 
   // 时间戳按秒记
@@ -89,7 +90,7 @@ class TableList extends Component {
           });
         }
 
-        this.setState({ dataSource });
+        this.setState({ dataSource, loading: false });
       })
       .catch(err => console.log(err));
   };
@@ -104,27 +105,29 @@ class TableList extends Component {
   render() {
     return (
       <div className={styles.listContainer}>
-        时间：
-        <RangePicker
-          defaultValue={[moment(this.startTime * 1000), moment(this.endTime * 1000)]}
-          // defaultValue={[moment().subtract(1, 'h'), moment()]}
-          disabledDate={this.disabledDate}
-          format="YYYY-MM-DD HH:mm:ss"
-          ranges={{
-            最近一小时: [moment().subtract(1, 'h'), moment()],
-            最近一天: [moment().subtract(1, 'd'), moment()],
-            最近一周: [moment().subtract(1, 'w'), moment()],
-          }}
-          showTime={{ format: 'HH:mm:ss' }}
-          placeholder={['起始时间', '结束时间']}
-          onOk={this.onOk}
-        />
-        <Table
-          columns={this.colums}
-          dataSource={this.state.dataSource}
-          scroll={{ x: true }}
-          pagination={{ pageSize: 5, showQuickJumper: true }}
-        />
+        <Spin spinning={this.state.loading}>
+          时间：
+          <RangePicker
+            defaultValue={[moment(this.startTime * 1000), moment(this.endTime * 1000)]}
+            // defaultValue={[moment().subtract(1, 'h'), moment()]}
+            disabledDate={this.disabledDate}
+            format="YYYY-MM-DD HH:mm:ss"
+            ranges={{
+              最近一小时: [moment().subtract(1, 'h'), moment()],
+              最近一天: [moment().subtract(1, 'd'), moment()],
+              最近一周: [moment().subtract(1, 'w'), moment()],
+            }}
+            showTime={{ format: 'HH:mm:ss' }}
+            placeholder={['起始时间', '结束时间']}
+            onOk={this.onOk}
+          />
+          <Table
+            columns={this.colums}
+            dataSource={this.state.dataSource}
+            scroll={{ x: true }}
+            pagination={{ pageSize: 5, showQuickJumper: true }}
+          />
+        </Spin>
       </div>
     );
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DatePicker, Select } from 'antd';
+import { DatePicker, Select, Spin } from 'antd';
 import { connect } from 'dva';
 import { Chart, Geom, Axis, Tooltip, Legend } from 'bizcharts';
 import moment from 'moment';
@@ -15,6 +15,7 @@ class LineChart extends React.Component {
     absoluteData: [],
     relativeData: [],
     isAbsolute: false,
+    loading: true,
   };
 
   // 时间戳按秒记
@@ -71,7 +72,7 @@ class LineChart extends React.Component {
           });
         }
 
-        this.setState({ absoluteData, relativeData });
+        this.setState({ absoluteData, relativeData, loading: false });
       })
       .catch(err => console.log(err));
   };
@@ -91,55 +92,58 @@ class LineChart extends React.Component {
   render() {
     const cols = {
       date: {
+        nice: true,
         tickCount: 6,
       },
     };
     return (
       <div className={styles.chartContainer}>
-        <div>
-          时间：
-          <RangePicker
-            defaultValue={[moment(this.startTime * 1000), moment(this.endTime * 1000)]}
-            disabledDate={this.disabledDate}
-            format="YYYY-MM-DD HH:mm:ss"
-            ranges={{
-              最近一小时: [moment().subtract(1, 'h'), moment()],
-              最近一天: [moment().subtract(1, 'd'), moment()],
-              最近一周: [moment().subtract(1, 'w'), moment()],
-            }}
-            showTime={{ format: 'HH:mm:ss' }}
-            placeholder={['起始时间', '结束时间']}
-            style={{ marginRight: 16 }}
-            onOk={this.onOk}
-          />
-          展示类型：
-          <Select
-            defaultValue="relative"
-            onChange={this.onSelectChange}
-            style={{ width: 120, marginBottom: 10 }}
-          >
-            <Option value="relative">相对变化</Option>
-            <Option value="absolute">绝对变化</Option>
-          </Select>
-        </div>
+        <Spin spinning={this.state.loading}>
+          <div>
+            时间：
+            <RangePicker
+              defaultValue={[moment(this.startTime * 1000), moment(this.endTime * 1000)]}
+              disabledDate={this.disabledDate}
+              format="YYYY-MM-DD HH:mm:ss"
+              ranges={{
+                最近一小时: [moment().subtract(1, 'h'), moment()],
+                最近一天: [moment().subtract(1, 'd'), moment()],
+                最近一周: [moment().subtract(1, 'w'), moment()],
+              }}
+              showTime={{ format: 'HH:mm:ss' }}
+              placeholder={['起始时间', '结束时间']}
+              style={{ marginRight: 16 }}
+              onOk={this.onOk}
+            />
+            展示类型：
+            <Select
+              defaultValue="relative"
+              onChange={this.onSelectChange}
+              style={{ width: 120, marginBottom: 10 }}
+            >
+              <Option value="relative">相对变化</Option>
+              <Option value="absolute">绝对变化</Option>
+            </Select>
+          </div>
 
-        <Chart
-          height={400}
-          data={this.state.isAbsolute ? this.state.absoluteData : this.state.relativeData}
-          scale={cols}
-          forceFit
-        >
-          <Legend />
-          <Axis name="date" />
-          <Axis
-            name="angle"
-            label={{
-              formatter: val => `${val}°`,
-            }}
-          />
-          <Tooltip title="date" />
-          <Geom type="line" position="date*angle" size={2} color={'group'} shape={'smooth'} />
-        </Chart>
+          <Chart
+            height={400}
+            data={this.state.isAbsolute ? this.state.absoluteData : this.state.relativeData}
+            scale={cols}
+            forceFit
+          >
+            <Legend />
+            <Axis name="date" />
+            <Axis
+              name="angle"
+              label={{
+                formatter: val => `${val}°`,
+              }}
+            />
+            <Tooltip title="date" />
+            <Geom type="line" position="date*angle" size={2} color={'group'} shape={'smooth'} />
+          </Chart>
+        </Spin>
       </div>
     );
   }
