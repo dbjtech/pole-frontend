@@ -1,4 +1,4 @@
-const isDev = 1;
+const isDev = 0;
 
 export default {
   namespace: 'global',
