@@ -13,6 +13,7 @@ export default class MapComponent extends Component {
           version={amap.version}
           plugins={amap.plugins}
           center={amap.mapCenter}
+          zoom={amap.zoom}
         >
           {/* <div className={styles.promptContainer}>
             <span className={styles.normalDevice}>正常设备数：</span>

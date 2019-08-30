@@ -13,6 +13,16 @@ export const amap = {
   // 初始中心的经纬度
   mapCenter: { longitude: 113.5418, latitude: 22.13 },
   // 提供标尺参照和放缩工具
-  plugins: ['Scale', 'ControlBar'],
+  plugins: [
+    // 'Scale',
+    // 'ControlBar',
+    {
+      name: 'MapType',
+      options: {
+        defaultType: 1,
+      },
+    },
+  ],
   // 放缩范围在 3~20
+  zoom: 16,
 };
