@@ -13,6 +13,7 @@ class TableList extends Component {
   state = {
     dataSource: [],
     loading: true,
+    isUsingSocket: true,
   };
 
   // 时间戳按秒记
@@ -24,6 +25,8 @@ class TableList extends Component {
   socket = io(this.props.url);
 
   componentDidMount() {
+    const that = this;
+
     this.fetchData();
 
     this.socket.on('connect', () => {
@@ -32,6 +35,23 @@ class TableList extends Component {
 
     this.socket.on('event', function(data) {
       console.log('socket data: ', data);
+      if (!that.state.isUsingSocket) {
+        return;
+      }
+
+      if (data.type === 'np100') {
+        const dataSource = that.state.dataSource;
+
+        dataSource.push({
+          ...data,
+          key: dataSource.length + 1,
+          group: that.props.pole.name,
+          status: data.status ? '有车' : '无车',
+          date: moment(data.timestamp * 1000).format('YYYY-MM-DD HH:mm:ss'),
+        });
+
+        that.setState({ dataSource });
+      }
     });
   }
 
@@ -49,6 +69,13 @@ class TableList extends Component {
   ) => {
     if (!polesId) {
       return;
+    }
+
+    // 结束时间少于一分钟则取 socket 的数据
+    if (Math.abs(moment().unix() - endTime) < 60) {
+      this.setState({ isUsingSocket: true });
+    } else {
+      this.setState({ isUsingSocket: false });
     }
 
     axios
@@ -79,10 +106,6 @@ class TableList extends Component {
   disabledDate = current => current > moment();
 
   onOk = momentArr => {
-    // 这三个都不一样
-    // console.log(momentArr[0]);
-    console.log(momentArr[1]);
-    console.log(moment());
     // 这里请求后端数据，取得的数据不需要保存到 dva 中，因为只有表格图用到
     this.fetchData(this.props.pole.id, momentArr[0].unix(), momentArr[1].unix());
   };
