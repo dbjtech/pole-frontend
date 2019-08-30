@@ -18,7 +18,7 @@ class LineChart extends React.Component {
   };
 
   // 时间戳按秒记
-  startTime = (new Date() - 1000 * 60 * 60 * 24) / 1000;
+  startTime = (new Date() - 1000 * 60 * 60) / 1000;
 
   endTime = new Date() / 1000;
 
@@ -53,14 +53,14 @@ class LineChart extends React.Component {
         const relativeData = [];
         const list = data.data.data;
 
-        // 使角度数据按时间顺序排列
-        list.sort((a, b) => b.timestamp - a.timestamp);
+        // 使角度数据按时间升序排列
+        list.sort((a, b) => a.timestamp - b.timestamp);
         for (let i = 0; i < list.length; i += 1) {
           absoluteData.push({
             ...list[i],
             // 分组需要从 dva 中获取
             group: this.props.pole.name,
-            date: moment(list[i].timestamp * 1000).format('YYYY-MM-DD HH:mm:ss'),
+            date: moment(list[i].timestamp * 1000).format('YYYY-MM-DD_HH:mm:ss'),
           });
         }
 
@@ -91,7 +91,7 @@ class LineChart extends React.Component {
   render() {
     const cols = {
       date: {
-        range: [0, 1],
+        tickCount: 6,
       },
     };
     return (
@@ -137,23 +137,8 @@ class LineChart extends React.Component {
               formatter: val => `${val}°`,
             }}
           />
-          <Tooltip
-            crosshairs={{
-              type: 'y',
-            }}
-          />
+          <Tooltip title="date" />
           <Geom type="line" position="date*angle" size={2} color={'group'} shape={'smooth'} />
-          <Geom
-            type="point"
-            position="date*angle"
-            size={4}
-            shape={'circle'}
-            color={'group'}
-            style={{
-              stroke: '#fff',
-              lineWidth: 1,
-            }}
-          />
         </Chart>
       </div>
     );
