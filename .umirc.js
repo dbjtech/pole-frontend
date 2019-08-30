@@ -25,6 +25,7 @@ export default {
   proxy: {
     '/frontend': {
       target: 'http://poles.dbjtech.com/',
+      // target: 'http://172.16.2.33:3000',
       changeOrigin: true,
       // pathRewrite: { '^/api': '' },
     },

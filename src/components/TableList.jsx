@@ -3,7 +3,7 @@ import { DatePicker, Table, Spin } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
 import axios from 'axios';
-// import io from 'socket.io-client';
+import io from 'socket.io-client';
 
 import styles from './Main.css';
 
@@ -21,14 +21,18 @@ class TableList extends Component {
   endTime = new Date() / 1000;
 
   // 初始化 socket
-  // socket = io(this.props.url);
+  socket = io(this.props.url);
 
   componentDidMount() {
     this.fetchData();
 
-    // this.socket.on('connect', () => {
-    //   console.log('socket connected');
-    // });
+    this.socket.on('connect', () => {
+      console.log('socket connected');
+    });
+
+    this.socket.on('event', function(data) {
+      console.log('socket data: ', data);
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -77,8 +81,8 @@ class TableList extends Component {
   onOk = momentArr => {
     // 这三个都不一样
     // console.log(momentArr[0]);
-    // console.log(momentArr[1]);
-    // console.log(moment());
+    console.log(momentArr[1]);
+    console.log(moment());
     // 这里请求后端数据，取得的数据不需要保存到 dva 中，因为只有表格图用到
     this.fetchData(this.props.pole.id, momentArr[0].unix(), momentArr[1].unix());
   };

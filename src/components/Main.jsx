@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Card } from 'antd';
 import TableList from './TableList';
 import LineChart from './LineChart';
-import LineEchart from './LineEchart';
+// import LineEchart from './LineEchart';
 import MapComponent from './MapComponent';
 
 import config from '../config';
@@ -26,8 +26,8 @@ export default class Main extends Component {
           </Col>
           <Col sm={24} lg={12} className={styles.card}>
             <Card title={config.chartName}>
-              {/* <LineChart /> */}
-              <LineEchart />
+              <LineChart />
+              {/* <LineEchart /> */}
             </Card>
           </Col>
         </Row>
