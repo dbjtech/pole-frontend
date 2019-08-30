@@ -29,12 +29,12 @@ class TableList extends Component {
 
     this.fetchData();
 
-    this.socket.on('connect', () => {
-      console.log('socket connected');
-    });
+    // this.socket.on('connect', () => {
+    //   console.log('socket connected');
+    // });
 
-    this.socket.on('event', function(data) {
-      console.log('socket data: ', data);
+    this.socket.on('event', data => {
+      console.log('TableList socket data: ', data);
       if (!that.state.isUsingSocket) {
         return;
       }
@@ -42,7 +42,7 @@ class TableList extends Component {
       if (data.type === 'np100') {
         const dataSource = that.state.dataSource;
 
-        dataSource.push({
+        dataSource.unshift({
           ...data,
           key: dataSource.length + 1,
           group: that.props.pole.name,
@@ -86,12 +86,12 @@ class TableList extends Component {
         const list = data.data.data;
         const dataSource = [];
 
-        // 使车辆数据按时间顺序排列
+        // 使车辆数据按时间降序排列，最新在前
         list.sort((a, b) => b.timestamp - a.timestamp);
         for (let i = 0; i < list.length; i += 1) {
           dataSource.push({
             ...list[i],
-            key: i + 1,
+            key: list.length - i,
             group: this.props.pole.name,
             status: list[i].status ? '有车' : '无车',
             date: moment(list[i].timestamp * 1000).format('YYYY-MM-DD HH:mm:ss'),

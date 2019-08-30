@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import { Chart, Geom, Axis, Tooltip, Legend } from 'bizcharts';
 import moment from 'moment';
 import axios from 'axios';
+import io from 'socket.io-client';
 
 import styles from './Main.css';
 
@@ -16,16 +17,49 @@ class LineChart extends React.Component {
     relativeData: [],
     isAbsolute: false,
     loading: true,
+    isUsingSocket: true,
   };
 
   // 时间戳按秒记
-  startTime = (new Date() - 1000 * 60 * 60 * 12) / 1000;
+  startTime = (new Date() - 1000 * 60 * 60 * 1) / 1000;
 
   // 注意取得的时间，可能这段时间内没有数据
-  endTime = (new Date() - 1000 * 60 * 60 * 11) / 1000;
+  endTime = (new Date() - 1000 * 60 * 60 * 0) / 1000;
+
+  socket = io(this.props.url);
 
   componentDidMount() {
+    const that = this;
+
     this.fetchData();
+
+    this.socket.on('event', data => {
+      console.log('LineChart socket data: ', data);
+      if (!that.state.isUsingSocket) {
+        return;
+      }
+
+      if (data.type === 'zj300') {
+        const absoluteData = that.state.absoluteData;
+        const relativeData = that.state.relativeData;
+
+        absoluteData.push({
+          ...data,
+          group: that.props.pole.name,
+          date: moment(data.timestamp * 1000).format('YYYY-MM-DD_HH:mm:ss'),
+        });
+        relativeData.push({
+          ...data,
+          angle:
+            absoluteData.length > 1
+              ? absoluteData[absoluteData.length - 1].angle -
+                absoluteData[absoluteData.length - 2].angle
+              : 0,
+        });
+
+        that.setState({ absoluteData, relativeData });
+      }
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -44,6 +78,13 @@ class LineChart extends React.Component {
       return;
     }
 
+    // 结束时间少于一分钟则取 socket 的数据
+    if (Math.abs(moment().unix() - endTime) < 60) {
+      this.setState({ isUsingSocket: true });
+    } else {
+      this.setState({ isUsingSocket: false });
+    }
+
     axios
       .get(
         `${this.props.url}/frontend/zj300?poles_id=${polesId}&start_time=${startTime}&end_time=${endTime}`,
@@ -53,7 +94,7 @@ class LineChart extends React.Component {
         const relativeData = [];
         const list = data.data.data;
 
-        // 使角度数据按时间升序排列
+        // 使角度数据按时间升序排列，最新在后
         list.sort((a, b) => a.timestamp - b.timestamp);
         for (let i = 0; i < list.length; i += 1) {
           absoluteData.push({
