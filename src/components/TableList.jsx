@@ -15,12 +15,11 @@ class TableList extends Component {
     loading: true,
     isUsingSocket: true,
     imeiFilter: [],
+
+    // 时间戳按秒记
+    startTime: (new Date() - 1000 * 60 * 60 * 24) / 1000,
+    endTime: new Date() / 1000,
   };
-
-  // 时间戳按秒记
-  startTime = (new Date() - 1000 * 60 * 60 * 24) / 1000;
-
-  endTime = new Date() / 1000;
 
   // 初始化 socket
   socket = io(this.props.url);
@@ -56,17 +55,25 @@ class TableList extends Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     // 典型用法（不要忘记比较 props）：
     if (this.props.pole.id !== prevProps.pole.id) {
+      this.setState({
+        startTime: (new Date() - 1000 * 60 * 60 * 24) / 1000,
+        endTime: new Date() / 1000,
+      });
+    } else if (
+      this.state.startTime !== prevState.startTime ||
+      this.state.endTime !== prevState.endTime
+    ) {
       this.fetchData(this.props.pole.id);
     }
   }
 
   fetchData = (
     polesId = this.props.pole.id,
-    startTime = this.startTime,
-    endTime = this.endTime,
+    startTime = this.state.startTime,
+    endTime = this.state.endTime,
   ) => {
     if (!polesId) {
       return;
@@ -116,7 +123,11 @@ class TableList extends Component {
 
   onOk = momentArr => {
     // 这里请求后端数据，取得的数据不需要保存到 dva 中，因为只有表格图用到
-    this.fetchData(this.props.pole.id, momentArr[0].unix(), momentArr[1].unix());
+    // 改变状态自动请求信数据
+    this.setState({
+      startTime: momentArr[0].unix(),
+      endTime: momentArr[1].unix(),
+    });
   };
 
   render() {
@@ -157,7 +168,7 @@ class TableList extends Component {
         <Spin spinning={this.state.loading}>
           时间：
           <RangePicker
-            defaultValue={[moment(this.startTime * 1000), moment(this.endTime * 1000)]}
+            value={[moment(this.state.startTime * 1000), moment(this.state.endTime * 1000)]}
             // defaultValue={[moment().subtract(1, 'h'), moment()]}
             disabledDate={this.disabledDate}
             format="YYYY-MM-DD HH:mm:ss"

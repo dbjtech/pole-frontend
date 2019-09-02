@@ -18,13 +18,12 @@ class LineChart extends React.Component {
     isAbsolute: false,
     loading: true,
     isUsingSocket: true,
+
+    // 时间戳按秒记
+    startTime: (new Date() - 1000 * 60 * 60 * 1) / 1000,
+    // 注意取得的时间，可能这段时间内没有数据
+    endTime: (new Date() - 1000 * 60 * 60 * 0) / 1000,
   };
-
-  // 时间戳按秒记
-  startTime = (new Date() - 1000 * 60 * 60 * 1) / 1000;
-
-  // 注意取得的时间，可能这段时间内没有数据
-  endTime = (new Date() - 1000 * 60 * 60 * 0) / 1000;
 
   socket = io(this.props.url);
 
@@ -66,17 +65,25 @@ class LineChart extends React.Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     // 典型用法（不要忘记比较 props）：
     if (this.props.pole.id !== prevProps.pole.id) {
+      this.setState({
+        startTime: (new Date() - 1000 * 60 * 60 * 24) / 1000,
+        endTime: new Date() / 1000,
+      });
+    } else if (
+      this.state.startTime !== prevState.startTime ||
+      this.state.endTime !== prevState.endTime
+    ) {
       this.fetchData(this.props.pole.id);
     }
   }
 
   fetchData = (
     polesId = this.props.pole.id,
-    startTime = this.startTime,
-    endTime = this.endTime,
+    startTime = this.state.startTime,
+    endTime = this.state.endTime,
   ) => {
     if (!polesId) {
       return;
@@ -128,7 +135,10 @@ class LineChart extends React.Component {
 
   onOk = momentArr => {
     // 这里请求后端数据，取得的数据不需要保存到 dva 中，因为只有折线图用到
-    this.fetchData(this.state.polesId, momentArr[0].unix(), momentArr[1].unix());
+    this.setState({
+      startTime: momentArr[0].unix(),
+      endTime: momentArr[1].unix(),
+    });
   };
 
   disabledDate = current => current > moment();
@@ -146,7 +156,7 @@ class LineChart extends React.Component {
           <div style={{ whiteSpace: 'nowrap' }}>
             时间：
             <RangePicker
-              defaultValue={[moment(this.startTime * 1000), moment(this.endTime * 1000)]}
+              value={[moment(this.state.startTime * 1000), moment(this.state.endTime * 1000)]}
               disabledDate={this.disabledDate}
               format="YYYY-MM-DD HH:mm:ss"
               ranges={{
