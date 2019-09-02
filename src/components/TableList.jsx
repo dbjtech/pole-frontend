@@ -14,6 +14,7 @@ class TableList extends Component {
     dataSource: [],
     loading: true,
     isUsingSocket: true,
+    imeiFilter: [],
   };
 
   // 时间戳按秒记
@@ -34,8 +35,8 @@ class TableList extends Component {
     // });
 
     this.socket.on('event', data => {
-      console.log('TableList socket data: ', data);
-      if (!that.state.isUsingSocket) {
+      // console.log('TableList socket data: ', data);
+      if (!that.state.isUsingSocket || data.poles_id !== this.props.pole.id) {
         return;
       }
 
@@ -85,6 +86,7 @@ class TableList extends Component {
       .then(data => {
         const list = data.data.data;
         const dataSource = [];
+        const imeiArr = [];
 
         // 使车辆数据按时间降序排列，最新在前
         list.sort((a, b) => b.timestamp - a.timestamp);
@@ -96,9 +98,16 @@ class TableList extends Component {
             status: list[i].status ? '有车' : '无车',
             date: moment(list[i].timestamp * 1000).format('YYYY-MM-DD HH:mm:ss'),
           });
+
+          imeiArr.push(list[i].imei);
         }
 
-        this.setState({ dataSource, loading: false });
+        const imeiFilter = [...new Set(imeiArr)].map(value => ({
+          text: `${value}`,
+          value: `${value}`,
+        }));
+
+        this.setState({ dataSource, loading: false, imeiFilter });
       })
       .catch(err => console.log(err));
   };
@@ -127,16 +136,19 @@ class TableList extends Component {
         title: 'IMEI',
         dataIndex: 'imei',
         key: 'imei',
+        filters: this.state.imeiFilter,
+        onFilter: (value, record) => record.imei.indexOf(value) === 0,
       },
-      {
-        title: '状态',
-        dataIndex: 'status',
-        key: 'status',
-      },
+      // {
+      //   title: '状态',
+      //   dataIndex: 'status',
+      //   key: 'status',
+      // },
       {
         title: '时间',
         dataIndex: 'date',
         key: 'date',
+        sorter: (a, b) => new Date(a.date) - new Date(b.date),
       },
     ];
 
@@ -162,7 +174,13 @@ class TableList extends Component {
             columns={colums}
             dataSource={this.state.dataSource.filter(value => value.status === '有车')}
             scroll={{ x: true }}
-            pagination={{ pageSize: 5, showQuickJumper: true }}
+            pagination={{
+              showQuickJumper: true,
+              showSizeChanger: true,
+              pageSizeOptions: ['10', '20', '50', '100'],
+            }}
+            size="small"
+            style={{ marginTop: 8 }}
           />
         </Spin>
       </div>

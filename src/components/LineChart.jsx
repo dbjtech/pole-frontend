@@ -34,8 +34,8 @@ class LineChart extends React.Component {
     this.fetchData();
 
     this.socket.on('event', data => {
-      console.log('LineChart socket data: ', data);
-      if (!that.state.isUsingSocket) {
+      // console.log('LineChart socket data: ', data);
+      if (!that.state.isUsingSocket || data.poles_id !== this.props.pole.id) {
         return;
       }
 
@@ -56,6 +56,10 @@ class LineChart extends React.Component {
                 absoluteData[absoluteData.length - 2].angle
               : 0,
         });
+
+        // 保证使图向左移一个单位
+        absoluteData.shift();
+        relativeData.shift();
 
         that.setState({ absoluteData, relativeData });
       }
@@ -139,7 +143,7 @@ class LineChart extends React.Component {
     return (
       <div className={styles.chartContainer}>
         <Spin spinning={this.state.loading}>
-          <div>
+          <div style={{ whiteSpace: 'nowrap' }}>
             时间：
             <RangePicker
               defaultValue={[moment(this.startTime * 1000), moment(this.endTime * 1000)]}
@@ -152,7 +156,7 @@ class LineChart extends React.Component {
               }}
               showTime={{ format: 'HH:mm:ss' }}
               placeholder={['起始时间', '结束时间']}
-              style={{ marginRight: 16 }}
+              style={{ marginLeft: 28 }}
               onOk={this.onOk}
             />
           </div>
