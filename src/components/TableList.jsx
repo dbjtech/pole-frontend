@@ -58,6 +58,7 @@ class TableList extends Component {
   componentDidUpdate(prevProps, prevState) {
     // 典型用法（不要忘记比较 props）：
     if (this.props.pole.id !== prevProps.pole.id) {
+      // 取最近一天
       this.setState({
         startTime: (new Date() - 1000 * 60 * 60 * 24) / 1000,
         endTime: new Date() / 1000,
@@ -113,6 +114,11 @@ class TableList extends Component {
           text: `${value}`,
           value: `${value}`,
         }));
+
+        this.props.dispatch({
+          type: 'global/setImeiFilter',
+          payload: imeiFilter,
+        });
 
         this.setState({ dataSource, loading: false, imeiFilter });
       })

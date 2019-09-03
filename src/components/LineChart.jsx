@@ -20,9 +20,9 @@ class LineChart extends React.Component {
     isUsingSocket: true,
 
     // 时间戳按秒记
-    startTime: (new Date() - 1000 * 60 * 60 * 1) / 1000,
+    startTime: (new Date() - 1000 * 60 * 60) / 1000,
     // 注意取得的时间，可能这段时间内没有数据
-    endTime: (new Date() - 1000 * 60 * 60 * 0) / 1000,
+    endTime: new Date() / 1000,
   };
 
   socket = io(this.props.url);
@@ -68,8 +68,9 @@ class LineChart extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     // 典型用法（不要忘记比较 props）：
     if (this.props.pole.id !== prevProps.pole.id) {
+      // 取最近一小时
       this.setState({
-        startTime: (new Date() - 1000 * 60 * 60 * 24) / 1000,
+        startTime: (new Date() - 1000 * 60 * 60) / 1000,
         endTime: new Date() / 1000,
       });
     } else if (
