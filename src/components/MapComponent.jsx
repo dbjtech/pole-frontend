@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Map, Marker, InfoWindow } from 'react-amap';
 import { connect } from 'dva';
+import axios from 'axios';
 
 import styles from './Main.css';
 
@@ -31,6 +32,24 @@ class MapComponent extends Component {
     ],
     // 放缩范围在 3~20
     zoom: 16,
+  };
+
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  fetchData = (polesId = this.props.pole.id) => {
+    if (!polesId) {
+      return;
+    }
+
+    axios
+      .get(`${this.props.url}/frontend/gps?poles_id=${polesId}`)
+      .then(data => {
+        const list = data.data.data;
+        console.log(list);
+      })
+      .catch(err => console.log(err));
   };
 
   markerEvents = {
@@ -91,6 +110,7 @@ class MapComponent extends Component {
 function mapStateToProps(state) {
   return {
     pole: state.global.pole,
+    url: state.global.url,
     imeiFilter: state.global.imeiFilter,
   };
 }
