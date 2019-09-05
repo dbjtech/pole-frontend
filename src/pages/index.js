@@ -3,6 +3,7 @@ import Main from '../components/Main';
 import SideNav from '../components/SideNav';
 
 import config from '../config';
+import bannerImg from '../assets/国家电网.png';
 // import styles from './index.css';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -15,7 +16,17 @@ export default function() {
         <SideNav />
       </Sider>
       <Layout>
-        <Header style={{ background: '#fff', fontSize: 20 }}>{config.name}</Header>
+        <Header
+          style={{
+            background: '#fff',
+            fontSize: 24,
+            color: 'rgb(0,111,105)',
+            fontWeight: 'bolder',
+          }}
+        >
+          <img src={bannerImg} alt="国家电网" style={{ height: 48, marginRight: 16 }} />
+          {config.name}
+        </Header>
         <Content style={{ margin: 24 }}>
           <Main />
         </Content>
