@@ -3,6 +3,7 @@ import { Map, Marker, InfoWindow } from 'react-amap';
 import { Icon } from 'antd';
 import { connect } from 'dva';
 import axios from 'axios';
+import { wgs84togcj02 } from 'coordtransform';
 
 import config from '../config';
 import styles from './Main.css';
@@ -56,12 +57,18 @@ class MapComponent extends Component {
       .get(`${this.props.url}/frontend/gps?poles_id=${polesId}`)
       .then(data => {
         const list = data.data.data;
-        const location = list[0];
+        const wgs84Location = list[0];
+        const gcj02Location = wgs84togcj02(wgs84Location.lng, wgs84Location.lat);
 
-        if (location.lng !== null && location.lat !== null && location.alt !== null) {
+        if (
+          wgs84Location.lng !== null &&
+          wgs84Location.lat !== null &&
+          wgs84Location.alt !== null
+        ) {
           this.setState({
-            mapCenter: { longitude: location.lng, latitude: location.lat },
-            altitude: location.alt,
+            // mapCenter: { longitude: wgs84Location.lng, latitude: wgs84Location.lat },
+            mapCenter: { longitude: gcj02Location[0], latitude: gcj02Location[1] },
+            altitude: wgs84Location.alt,
           });
         }
       })

@@ -11,6 +11,7 @@
     "antd": "^3.19.5",
     "axios": "^0.19.0",
     "bizcharts": "^3.5.5",
+    "coordtransform": "^2.1.2",
     "echarts": "^4.2.1",
     "echarts-for-react": "^2.0.15-beta.0",
     "mockjs": "^1.0.1-beta3",
