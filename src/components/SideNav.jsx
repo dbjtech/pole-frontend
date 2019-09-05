@@ -62,8 +62,13 @@ class SideNav extends Component {
           <Select
             placeholder="搜索框"
             showSearch
+            suffixIcon={<Icon type="search" />}
             value={this.props.pole.id}
-            style={{ width: 120, marginBottom: 5, marginTop: 10 }}
+            style={{
+              width: '95%',
+              marginTop: 10,
+              marginBottom: 10,
+            }}
             onChange={this.onChange}
           >
             {this.state.polesList.map(item => (
