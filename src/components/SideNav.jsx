@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Menu, Select, Spin } from 'antd';
+import { Menu, Select, Spin, Icon } from 'antd';
 import { connect } from 'dva';
 import axios from 'axios';
 
@@ -7,6 +7,9 @@ import logo from '../assets/logo-01.png';
 import styles from './Main.css';
 
 const { Option } = Select;
+const IconFont = Icon.createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_1388043_4k110pfp564.js',
+});
 
 class SideNav extends Component {
   state = {
@@ -77,7 +80,10 @@ class SideNav extends Component {
             onSelect={this.onSelect}
           >
             {this.state.polesList.map(item => (
-              <Menu.Item key={item.id}>{item.name}</Menu.Item>
+              <Menu.Item key={item.id}>
+                <IconFont type="icon-dianxiangan" />
+                {item.name}
+              </Menu.Item>
             ))}
           </Menu>
         </Spin>
