@@ -40,8 +40,11 @@ class MapComponent extends Component {
     zoom: 16,
   };
 
-  componentDidMount() {
-    this.fetchData();
+  componentDidUpdate(prevProps, prevState) {
+    // 典型用法（不要忘记比较 props）：
+    if (this.props.pole.id !== prevProps.pole.id) {
+      this.fetchData(this.props.pole.id);
+    }
   }
 
   fetchData = (polesId = this.props.pole.id) => {
@@ -53,7 +56,14 @@ class MapComponent extends Component {
       .get(`${this.props.url}/frontend/gps?poles_id=${polesId}`)
       .then(data => {
         const list = data.data.data;
-        console.log(list);
+        const location = list[0];
+
+        if (location.lng !== null && location.lat !== null && location.alt !== null) {
+          this.setState({
+            mapCenter: { longitude: location.lng, latitude: location.lat },
+            altitude: location.alt,
+          });
+        }
       })
       .catch(err => console.log(err));
   };
@@ -68,12 +78,7 @@ class MapComponent extends Component {
   };
 
   windowEvents = {
-    open: () => {
-      // console.log('InfoWindow opened');
-    },
     close: () => {
-      // console.log('InfoWindow closed');
-
       this.setState({
         infoWindowVisible: false,
       });

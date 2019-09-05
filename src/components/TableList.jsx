@@ -34,7 +34,7 @@ class TableList extends Component {
     // });
 
     this.socket.on('event', data => {
-      console.log('TableList socket data: ', data);
+      // console.log('TableList socket data: ', data);
       if (!that.state.isUsingSocket || data.poles_id !== this.props.pole.id) {
         return;
       }

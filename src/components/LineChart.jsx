@@ -45,7 +45,7 @@ class LineChart extends React.Component {
         absoluteData.push({
           ...data,
           group: that.props.pole.name,
-          date: moment(data.timestamp * 1000).format('YYYY-MM-DD_HH:mm:ss'),
+          date: moment(data.timestamp * 1000).format('YYYY-MM-DDTHH:mm:ss'),
         });
         relativeData.push({
           ...data,
@@ -113,7 +113,7 @@ class LineChart extends React.Component {
             ...list[i],
             // 分组需要从 dva 中获取
             group: this.props.pole.name,
-            date: moment(list[i].timestamp * 1000).format('YYYY-MM-DD_HH:mm:ss'),
+            date: moment(list[i].timestamp * 1000).format('YYYY-MM-DDTHH:mm:ss'),
           });
         }
 
@@ -198,6 +198,7 @@ class LineChart extends React.Component {
               }}
             />
             <Tooltip title="date" />
+            {/* Geom 决定横轴和纵轴表示的数据 */}
             <Geom type="line" position="date*angle" size={2} color={'group'} shape={'smooth'} />
           </Chart>
         </Spin>
