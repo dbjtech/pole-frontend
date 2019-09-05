@@ -27,8 +27,6 @@ class TableList extends Component {
   componentDidMount() {
     const that = this;
 
-    this.fetchData();
-
     // this.socket.on('connect', () => {
     //   console.log('socket connected');
     // });

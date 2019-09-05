@@ -30,8 +30,6 @@ class LineChart extends React.Component {
   componentDidMount() {
     const that = this;
 
-    this.fetchData();
-
     this.socket.on('event', data => {
       // console.log('LineChart socket data: ', data);
       if (!that.state.isUsingSocket || data.poles_id !== this.props.pole.id) {

@@ -3,6 +3,7 @@ import { Map, Marker, InfoWindow } from 'react-amap';
 import { Icon } from 'antd';
 import { connect } from 'dva';
 import axios from 'axios';
+import io from 'socket.io-client';
 import { wgs84togcj02 } from 'coordtransform';
 
 import config from '../config';
@@ -40,6 +41,28 @@ class MapComponent extends Component {
     // 放缩范围在 3~20
     zoom: 16,
   };
+
+  socket = io(this.props.url);
+
+  componentDidMount() {
+    const that = this;
+
+    this.socket.on('event', data => {
+      // console.log('MapComponent socket data: ', data);
+      if (!that.state.isUsingSocket || data.poles_id !== this.props.pole.id) {
+        return;
+      }
+
+      if (data.type === 'gps') {
+        const gcj02Location = wgs84togcj02(data.lng, data.lat);
+
+        this.setState({
+          mapCenter: { longitude: gcj02Location[0], latitude: gcj02Location[1] },
+          altitude: data.alt,
+        });
+      }
+    });
+  }
 
   componentDidUpdate(prevProps, prevState) {
     // 典型用法（不要忘记比较 props）：
