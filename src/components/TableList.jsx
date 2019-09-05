@@ -60,8 +60,8 @@ class TableList extends Component {
     if (this.props.pole.id !== prevProps.pole.id) {
       // 取最近一天
       this.setState({
-        startTime: (new Date() - 1000 * 60 * 60 * 24) / 1000,
-        endTime: new Date() / 1000,
+        startTime: Math.floor((new Date() - 1000 * 60 * 60 * 24) / 1000),
+        endTime: Math.floor(new Date() / 1000),
       });
     } else if (
       this.state.startTime !== prevState.startTime ||

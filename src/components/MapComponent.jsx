@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import { Map, Marker, InfoWindow } from 'react-amap';
+import { Icon } from 'antd';
 import { connect } from 'dva';
 import axios from 'axios';
 
+import config from '../config';
 import styles from './Main.css';
+
+const IconFont = Icon.createFromIconfontCN({
+  scriptUrl: config.iconCdn,
+});
 
 class MapComponent extends Component {
   state = {
@@ -63,10 +69,10 @@ class MapComponent extends Component {
 
   windowEvents = {
     open: () => {
-      console.log('InfoWindow opened');
+      // console.log('InfoWindow opened');
     },
     close: () => {
-      console.log('InfoWindow closed');
+      // console.log('InfoWindow closed');
 
       this.setState({
         infoWindowVisible: false,
@@ -89,7 +95,12 @@ class MapComponent extends Component {
             <br />
             <span className={styles.abnormalDevice}>异常设备数：0</span>
           </div>
-          <Marker position={this.state.mapCenter} events={this.markerEvents} />
+          <Marker
+            position={this.state.mapCenter}
+            events={this.markerEvents}
+            // render={<Icon type="arrow-up" />}
+            render={<IconFont type="icon-dianxiangan2" style={{ fontSize: 40 }} />}
+          />
           <InfoWindow
             position={this.state.mapCenter}
             size={{ width: 200, height: 150 }}
