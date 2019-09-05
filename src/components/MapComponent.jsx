@@ -104,6 +104,7 @@ class MapComponent extends Component {
           <InfoWindow
             position={this.state.mapCenter}
             size={{ width: 200, height: 150 }}
+            offset={[0, -20]}
             visible={this.state.infoWindowVisible}
             events={this.windowEvents}
           >
