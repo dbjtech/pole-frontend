@@ -5,7 +5,7 @@ import axios from 'axios';
 
 import config from '../config';
 // import logo from '../assets/logo-01.png';
-import logo from '../assets/国家电网.png';
+import logo from '../assets/国家电网-fff.png';
 import styles from './Main.css';
 
 const { Option } = Select;
