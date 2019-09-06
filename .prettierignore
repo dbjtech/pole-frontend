@@ -1,6 +1,6 @@
 **/*.md
 **/*.svg
-**/*.ejs
+# **/*.ejs
 **/*.html
 package.json
 .umi
