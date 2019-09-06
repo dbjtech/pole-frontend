@@ -4,7 +4,8 @@ import { connect } from 'dva';
 import axios from 'axios';
 
 import config from '../config';
-import logo from '../assets/logo-01.png';
+// import logo from '../assets/logo-01.png';
+import logo from '../assets/国家电网.png';
 import styles from './Main.css';
 
 const { Option } = Select;
@@ -57,7 +58,7 @@ class SideNav extends Component {
       <nav>
         <div className={styles.logo}>
           <img src={logo} alt="logo" />
-          <h1>领翌科技</h1>
+          {/* <h1>领翌科技</h1> */}
         </div>
         <Spin spinning={this.state.loading}>
           <Select
